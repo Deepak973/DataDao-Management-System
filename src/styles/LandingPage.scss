@@ -123,6 +123,30 @@
       // fill: #4c2ffd;
     }
   }
+
+  span.wallet-address {
+    background-color: #f14c2c;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+  button.log-in-btn {
+    background-color: #f14c2c;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid #f14c2c;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  button.log-out-btn {
+    background-color: transparent;
+    color: #f14c2c;
+    border: none;
+    margin: 0px 10px;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
 }
 
 div.push-box {

@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GaslessWalletInterface } from "@gelatonetwork/gasless-onboarding";
+import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
+// import { SafeEventEmitterProvider } from "@web3auth/base";
+import { gaslessOnboarding } from "../components/onboard";
 import "../styles/LandingPage.scss";
 import { ethers } from "ethers";
 import lighthouse from "@lighthouse-web3/sdk";
@@ -7,6 +11,10 @@ import heroimg from "../assets/hero_image.jpg";
 import heroimg2 from "../assets/hero_image_2.png";
 
 function LandingPage() {
+  const [walletAddress, setWalletAddress] = useState("");
+  const [gaslessWallet, setGaslessWallet] = useState({});
+  const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
+
   const navigate = useNavigate();
   const openCreateDaoPage = () => {
     navigate("/create-data-dao/select-template");
@@ -160,6 +168,44 @@ function LandingPage() {
   */
   };
 
+  const login = async () => {
+    console.log("inside btn clicked");
+    try {
+      await gaslessOnboarding.init();
+      const provider = await gaslessOnboarding.login();
+      if (provider) {
+        setWeb3AuthProvider(provider);
+      }
+
+      const gaslessWallet = await gaslessOnboarding.getGaslessWallet();
+      if (!gaslessWallet.isInitiated()) await gaslessWallet.init();
+      const address = gaslessWallet.getAddress();
+      console.log(address);
+      setGaslessWallet(gaslessWallet);
+      setWalletAddress(address);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logout = async () => {
+    await gaslessOnboarding?.logout();
+
+    setWeb3AuthProvider(null);
+    setGaslessWallet(undefined);
+    setWalletAddress(undefined);
+    console.log(gaslessOnboarding);
+  };
+
+  useEffect(() => {
+    const getAddress = async () => {
+      await gaslessOnboarding.init();
+      const address = await gaslessOnboarding.getUserInfo();
+      console.log(address);
+    };
+    getAddress();
+  }, [walletAddress]);
+
   return (
     <>
       <section className="hero">
@@ -185,6 +231,8 @@ function LandingPage() {
           </button>
         </div>
       </section>
+      <button onClick={() => login()}>Login in</button>
+      <button onClick={() => logout()}>Login out</button>
       {/* <div className="second-section">
         <h1>Upload file to encrypt</h1>
         <input onChange={(e) => deployEncrypted(e)} type="file" />

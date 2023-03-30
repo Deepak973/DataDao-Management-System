@@ -4,16 +4,39 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import ConnectButtonCustom from "./ConnectButtonCustom";
+// import ConnectButtonCustom from "./ConnectButtonCustom";
+
+import { GaslessWalletInterface } from "@gelatonetwork/gasless-onboarding";
+import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
+// import { SafeEventEmitterProvider } from "@web3auth/base";
+import { gaslessOnboarding } from "../components/onboard";
+
 import logo from "../assets/datadaoverse_logo_1.png";
 import { Link } from "react-router-dom";
-import { useAccount, useSigner } from "wagmi";
+// import { useAccount, useSigner } from "wagmi";
 import * as PushAPI from "@pushprotocol/restapi";
 import { Modal } from "@mui/material";
+import { ethers } from "ethers";
 
 function Navbar() {
-  const { address, isConnected } = useAccount();
-  const { data: signer } = useSigner();
+  // const { address, isConnected } = useAccount();
+  // const { data: signer } = useSigner();
+  const [walletAddress, setWalletAddress] = useState("");
+  const [gaslessWallet, setGaslessWallet] = useState({});
+  const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
+  var address;
+  var signer;
+  try {
+    const { ethereum } = window;
+    console.log("in");
+    if (ethereum) {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      signer = provider.getSigner();
+      address = signer.getAddress();
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   // notifiaction model code *******************************
   const [open, setOpen] = useState(false);
@@ -57,27 +80,27 @@ function Navbar() {
       env: "staging",
     });
   };
-  useEffect(() => {
-    if (address) {
-      const subscriptions = PushAPI.user.getSubscriptions({
-        user: `eip155:5:${address}`, // user address in CAIP
-        env: "staging",
-      });
-      if (subscriptions.length === 0) {
-        setOpted(false);
-      }
-      for (let i = 0; i < subscriptions.length; i++) {
-        if (
-          subscriptions[i].channel ===
-          "0x158a6720c0709F8B55dc9753B92DF1d555A9F577"
-        ) {
-          console.log("subscribed");
-          setOpted(true);
-        }
-      }
-      console.log(subscriptions);
-    }
-  }, [address]);
+  // useEffect(() => {
+  //   if (address) {
+  //     const subscriptions = PushAPI.user.getSubscriptions({
+  //       user: `eip155:5:${address}`, // user address in CAIP
+  //       env: "staging",
+  //     });
+  //     if (subscriptions.length === 0) {
+  //       setOpted(false);
+  //     }
+  //     for (let i = 0; i < subscriptions.length; i++) {
+  //       if (
+  //         subscriptions[i].channel ===
+  //         "0x158a6720c0709F8B55dc9753B92DF1d555A9F577"
+  //       ) {
+  //         console.log("subscribed");
+  //         setOpted(true);
+  //       }
+  //     }
+  //     console.log(subscriptions);
+  //   }
+  // }, [address]);
 
   const style = {
     position: "absolute",
@@ -94,6 +117,35 @@ function Navbar() {
     overflow: "auto",
     overflowX: "hidden",
     maxWidth: "700px",
+  };
+
+  const login = async () => {
+    console.log("inside btn clicked");
+    try {
+      await gaslessOnboarding.init();
+      const provider = await gaslessOnboarding.login();
+      if (provider) {
+        setWeb3AuthProvider(provider);
+      }
+
+      const gaslessWallet = await gaslessOnboarding.getGaslessWallet();
+      if (!gaslessWallet.isInitiated()) await gaslessWallet.init();
+      const address = gaslessWallet.getAddress();
+      console.log(address);
+      setGaslessWallet(gaslessWallet);
+      setWalletAddress(address);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logout = async () => {
+    await gaslessOnboarding?.logout();
+
+    setWeb3AuthProvider(null);
+    setGaslessWallet(undefined);
+    setWalletAddress(undefined);
+    console.log(gaslessOnboarding);
   };
 
   return (
@@ -132,57 +184,9 @@ function Navbar() {
               <img src={logo} alt="logo" className="logo" />
             </Link>
           </div>
-          {/* <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
-          {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
 
-          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box> */}
           <div className="conncet-btn-div">
-            {isConnected ? (
+            {address ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="36px"
@@ -197,7 +201,27 @@ function Navbar() {
             ) : (
               ""
             )}
-            <ConnectButtonCustom />
+
+            {walletAddress ? (
+              <>
+                <span className="wallet-address">
+                  {walletAddress.substring(0, 6) +
+                    "..." +
+                    walletAddress.substring(
+                      walletAddress.length - 4,
+                      walletAddress.length
+                    )}
+                </span>{" "}
+                <button className="log-out-btn" onClick={() => logout()}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button className="log-in-btn" onClick={() => login()}>
+                Login
+              </button>
+            )}
+            {/* <ConnectButtonCustom /> */}
             {/* <ConnectButton
               accountStatus={{
                 smallScreen: "avatar",
