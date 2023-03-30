@@ -1,0 +1,44 @@
+.all-datadao-main-div {
+  width: 100%;
+  margin: 20px auto;
+  max-width: 1240px;
+}
+.all-datadao-div {
+  margin: 0 auto;
+}
+.all-datadao-title {
+  text-align: center;
+  padding: 10px;
+}
+.all-datadao-section1 {
+  padding: 10px;
+}
+.datadao-address {
+  /* background-color: aqua; */
+  /* width: 150px; */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: max-content;
+  padding: 5px 0px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fefcfc;
+  /* border: 1px solid #4c2ffd; */
+  /* padding: 10px; */
+}
+.all-datadao-section2 {
+  /* width: 60%; */
+  margin: 0 auto;
+}
+.dataDAo-details {
+  width: 20%;
+}
+button.view-more-all-dao {
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #4c2ffd;
+  color: #fefcfc;
+  border: 1px solid #4c2ffd;
+  border-radius: 5px;
+}

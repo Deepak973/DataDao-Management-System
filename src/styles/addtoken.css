@@ -1,0 +1,84 @@
+.add-token-leftbar-token-main {
+  /* border: 1px solid gray; */
+  width: 100%;
+}
+.addtoken-title {
+  margin: 0;
+  padding-top: 0;
+}
+.addtoken-main-div {
+  width: 80%;
+  /* border: 1px solid gray; */
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+.addtoken-main-section {
+  width: 100%;
+  margin-top: 10%;
+}
+.addtoken-rightbar-token-main {
+  width: 50%;
+  padding: 20px;
+}
+.addtoken-label {
+  /* padding: 20px; */
+}
+.addtoken-label input {
+  width: 100%;
+  margin: 10px 0px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(21, 22, 25);
+  color: rgb(255, 255, 255);
+  transition: box-shadow 300ms cubic-bezier(0.55, 0, 0.1, 1) 0ms;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px,
+    rgba(0, 0, 0, 0.23) 0px 0px 3px -2px, rgba(0, 0, 0, 0.17) 0px 0px 25px;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.09)
+  );
+}
+.addtoken-label1 {
+  font-size: 1rem;
+  font-weight: 600;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-top: 20px;
+}
+#demo-helper-text-misaligned-no-helper {
+  padding: 15px;
+  width: 90%;
+}
+.addtoken-btn {
+  /* padding-left: 10px; */
+}
+.add-token-cancel {
+  display: flex;
+  flex-direction: row;
+  /* border-bottom: 1px solid gray; */
+  justify-content: space-between;
+  padding: 20px;
+}
+
+button.add-member-btn-popup {
+  width: 100%;
+  background-color: #f14c2c;
+  border: 1px solid #f14c2c;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  color: #fefcfc;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+button.add-member {
+  font-weight: 700;
+  padding: 10px 30px;
+  background-color: #4c2ffd;
+  color: #fefcfc;
+  border: 1px solid #4c2ffd;
+  border-radius: 10px;
+}

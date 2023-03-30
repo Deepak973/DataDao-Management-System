@@ -1,0 +1,181 @@
+.select-main {
+  // box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.3);
+  // min-height: 90vh;
+  height: auto;
+  width: 100%;
+  margin: 0 auto;
+  // padding-top: 50px;
+  h1 {
+    color: #ffffff;
+    text-align: center;
+  }
+  p {
+    color: #ffffff;
+    text-align: center;
+    margin: 20px 0px;
+    // font-size: 1.1rem;
+  }
+  .templates-div {
+    width: 80%;
+    margin: 0px auto;
+    align-items: center;
+    margin-top: 0px;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    .card-template {
+      border: 1px solid rgb(45, 45, 45);
+      border-radius: 20px;
+      background-image: linear-gradient(
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      background-color: rgb(21, 22, 25);
+    }
+    img.cover-image-card {
+      filter: contrast(90%);
+    }
+    .card-template.disable {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    div {
+      margin: 0 auto;
+    }
+    button.card-show-more-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      background-color: #f14c2c;
+      color: #fff;
+      transition: all 0.2s linear;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+    p.template-info {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      // Addition lines for 2 line or multiline ellipsis
+      display: -webkit-box !important;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      white-space: normal;
+    }
+  }
+}
+
+.template-details-main {
+  position: relative;
+  width: 90%;
+  max-width: 1240px;
+  margin: 70px auto;
+  overflow: hidden;
+  height: max-content;
+  z-index: 10;
+  // min-height: 90vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  div.left-div {
+    background-color: #000000;
+    background-image: url("../assets/dark-dotted-2.png");
+    // background-position: 100% 200%;
+    // background-size: ;
+    background-repeat: repeat;
+    border: 1px solid #1d130d;
+    width: 60%;
+    color: #ffffff;
+    // border: 1px solid black;
+    padding: 20px 30px;
+    margin-right: 20px;
+    border-radius: 10px;
+    img {
+      width: 140px;
+      border-radius: 999999px;
+    }
+    h1 {
+      text-transform: uppercase;
+      color: #1976d2;
+      font-size: 2rem;
+      margin: 20px 0px;
+    }
+    h2 {
+      text-transform: uppercase;
+      color: #1976d2;
+      margin: 20px 0px;
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 1.05rem;
+      margin: 20px 0px;
+    }
+    button.use-template {
+      margin: 50px 0px;
+      cursor: pointer;
+      background: #f14c2c;
+      border: 1px solid #f14c2c;
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 10px;
+      width: 100%;
+      padding: 20px 10px;
+      position: relative;
+      z-index: 100;
+
+      // &:hover {
+      //   background: #1976d2;
+      //   border: 1px solid #1976d2;
+      //   color: #fff;
+      // }
+    }
+  }
+  div.right-div {
+    width: 40%;
+    color: #ffffff;
+    border: 1px solid #1d130d;
+    background-color: #000000;
+    border-radius: 10px;
+    padding: 0px 0px;
+    text-align: center;
+    background-image: url("../assets/dark-dotted-2.png");
+    // background-position: 100% 200%;
+    // background-size: ;
+    background-repeat: repeat;
+
+    h2 {
+      border-radius: 10px 10px 0px 0px;
+      padding: 10px 20px;
+      color: #ffffff;
+      background-color: #1976d2;
+    }
+  }
+  .included-config {
+    margin: 50px 0px;
+    // border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .included-item {
+      width: 60%;
+      margin: 10px 0px;
+      //   border: 1px solid black;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      svg {
+        margin-right: 10px;
+      }
+      p {
+        text-align: justify;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+    }
+  }
+}
