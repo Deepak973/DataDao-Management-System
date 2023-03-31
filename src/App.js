@@ -10,7 +10,7 @@ import { gaslessOnboarding } from "./components/onboard";
 //   RainbowKitProvider,
 //   darkTheme,
 // } from "@rainbow-me/rainbowkit";
-// import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 // import { polygonMumbai, filecoin, filecoinHyperspace } from "wagmi/chains";
 // import { alchemyProvider } from "wagmi/providers/alchemy";
 // import { publicProvider } from "wagmi/providers/public";

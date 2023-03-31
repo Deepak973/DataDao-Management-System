@@ -4,11 +4,12 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ContractFactory, ethers } from "ethers";
+import { ContractFactory, ethers, providers } from "ethers";
 import MembershipToken from "../../contracts/artifacts/DataDaoToken.json";
 import dataDaoInstace from "../../contracts/artifacts/dataDaoInstace.json";
 import dataDaoFactory from "../../contracts/artifacts/dataDaoFactory.json";
-import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
+import { gaslessOnboarding } from "../../components/onboard";
 
 const dataDaoFactoryContract = "0x0caC8C986452628Ed38483bcEE0D1cF85816946D";
 
@@ -18,17 +19,37 @@ function ReviewInfo({
   dataDaoDetails,
   setDataDaoDetails,
 }) {
-  const { address } = useAccount();
+  // const { address } = useAccount();
+  const [walletAddress, setWalletAddress] = useState("");
+  const [gaslessWallet, setGaslessWallet] = useState({});
+  const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
   const getContract = async () => {
     try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+      await gaslessOnboarding.init();
+      const provider = await gaslessOnboarding.login();
+      if (provider) {
+        setWeb3AuthProvider(provider);
+      }
+
+      const gaslessWallet = await gaslessOnboarding.getGaslessWallet();
+      if (!gaslessWallet.isInitiated()) await gaslessWallet.init();
+      const address = gaslessWallet.getAddress();
+      console.log(address);
+      setGaslessWallet(gaslessWallet);
+      setWalletAddress(address);
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      if (true) {
+        const provider = new providers.Web3Provider(web3AuthProvider);
         const signer = provider.getSigner();
         if (!provider) {
           console.log("Metamask is not installed, please install!");
         }
-        const { chainId } = await provider.getNetwork();
+        // const { chainId } = await provider.getNetwork();
+        const chainId = 3141;
         console.log("switch case for this case is: " + chainId);
         if (chainId === 3141) {
           const contract = new ethers.Contract(
@@ -82,10 +103,12 @@ function ReviewInfo({
     Math.floor(dataDaoDetails.vote_period_day) * 86400 +
     Math.floor(dataDaoDetails.vote_period_hour) * 3600 +
     Math.floor(dataDaoDetails.vote_period_minutes) * 60;
-    const { ethereum } = window;
+  const { ethereum } = window;
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+  // const provider = new ethers.providers.Web3Provider(ethereum);
+  // const signer = provider.getSigner();
+  const provider = new providers.Web3Provider(web3AuthProvider);
+  const signer = provider.getSigner();
 
   const luanchDataDao = async () => {
     const contract = await getContract();
@@ -94,13 +117,23 @@ function ReviewInfo({
       MembershipToken.data.bytecode,
       signer
     );
-    const tokenContract = await tokecFactory.deploy(
+    // const tokenContract = await tokecFactory.deploy(
+    //   dataDaoDetails.token_name,
+    //   dataDaoDetails.token_symbol,
+    //   10000
+    // );
+
+    const { data } = await tokecFactory.deploy(
       dataDaoDetails.token_name,
       dataDaoDetails.token_symbol,
       10000
     );
+    const { taskId } = await gaslessWallet.sponsorTransaction(
+      tokecFactory.address,
+      data
+    );
 
-    const tokenAddress = tokenContract.address;
+    const tokenAddress = taskId.address;
 
     console.log(tokenAddress);
     const daoFactory = new ContractFactory(
@@ -108,19 +141,38 @@ function ReviewInfo({
       dataDaoInstace.data.bytecode,
       signer
     );
-    const daoContract = await daoFactory.deploy(
-      address,
+    const { data2 } = await daoFactory.deploy(
+      walletAddress,
       tokenAddress,
       dataDaoDetails.vote_condition,
       dataDaoDetails.vote_minapproval,
       votingPeriodEpoch,
       0
     );
-    const dataDaoAddress = daoContract.address;
 
-    const tx = await contract.createDataDao(dataDaoAddress, dataDaoDetails.name, dataDaoDetails.description, tokenAddress,0, dataDaoDetails.token_holders[0].tokenHolderBalance);
-    // await tx.wait(); //dataDaoAddress,name, description, token, tokenPrice, totalSupply
-    console.log(tx);
+    const { taskId1 } = await gaslessWallet.sponsorTransaction(
+      daoFactory.address,
+      data2
+    );
+
+    const dataDaoAddress = taskId1.address;
+
+    const { data3 } = await contract.createDataDao(
+      dataDaoAddress,
+      dataDaoDetails.name,
+      dataDaoDetails.description,
+      tokenAddress,
+      0,
+      dataDaoDetails.token_holders[0].tokenHolderBalance
+    );
+
+    const { taskId3 } = await gaslessWallet.sponsorTransaction(
+      contract.address,
+      data3
+    );
+    const tx =
+      // await tx.wait(); //dataDaoAddress,name, description, token, tokenPrice, totalSupply
+      console.log(taskId3);
   };
 
   console.log(dataDaoDetails);

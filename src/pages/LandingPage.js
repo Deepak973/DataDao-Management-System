@@ -231,8 +231,8 @@ function LandingPage() {
           </button>
         </div>
       </section>
-      <button onClick={() => login()}>Login in</button>
-      <button onClick={() => logout()}>Login out</button>
+      {/* <button onClick={() => login()}>Login in</button>
+      <button onClick={() => logout()}>Login out</button> */}
       {/* <div className="second-section">
         <h1>Upload file to encrypt</h1>
         <input onChange={(e) => deployEncrypted(e)} type="file" />

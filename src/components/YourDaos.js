@@ -11,13 +11,37 @@ import { ContractFactory, ethers } from "ethers";
 import dataDaoFactory from "../contracts/artifacts/dataDaoFactory.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAccount, useSigner } from "wagmi";
+import { gaslessOnboarding } from "../components/onboard";
+
+// import { useAccount, useSigner } from "wagmi";
 
 const dataDaoFactoryContract = "0x0caC8C986452628Ed38483bcEE0D1cF85816946D";
 
 function YourDaos({ setSingleYourDataDao, setYourDaos, setDaoAddress }) {
   const [allDataDaos, setDataDaos] = useState([]);
-  const { address, isConnected } = useAccount();
+  // const { address, isConnected } = useAccount();
+  const [walletAddress, setWalletAddress] = useState("");
+  const [gaslessWallet, setGaslessWallet] = useState({});
+  const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
+
+  const getAddress = async () => {
+    try {
+      await gaslessOnboarding.init();
+      const provider = await gaslessOnboarding.login();
+      if (provider) {
+        setWeb3AuthProvider(provider);
+      }
+
+      const gaslessWallet = await gaslessOnboarding.getGaslessWallet();
+      if (!gaslessWallet.isInitiated()) await gaslessWallet.init();
+      const address = gaslessWallet.getAddress();
+      console.log(address);
+      setGaslessWallet(gaslessWallet);
+      setWalletAddress(address);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getContract = async () => {
     try {
@@ -29,7 +53,8 @@ function YourDaos({ setSingleYourDataDao, setYourDaos, setDaoAddress }) {
         if (!provider) {
           console.log("Metamask is not installed, please install!");
         }
-        const { chainId } = await provider.getNetwork();
+        // const { chainId } = await provider.getNetwork();
+        const chainId = 3141;
         console.log("switch case for this case is: " + chainId);
         if (chainId === 3141) {
           const contract = new ethers.Contract(
@@ -50,7 +75,7 @@ function YourDaos({ setSingleYourDataDao, setYourDaos, setDaoAddress }) {
 
   const getAllDataDaos = async () => {
     const contract = await getContract();
-    const dataDaos = await contract.getUserDataDaos(address);
+    const dataDaos = await contract.getUserDataDaos(walletAddress);
     console.log(dataDaos);
     setDataDaos(dataDaos);
   };
