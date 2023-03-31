@@ -26,17 +26,17 @@ function Navbar() {
   const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
   var address;
   var signer;
-  try {
-    const { ethereum } = window;
-    console.log("in");
-    if (ethereum) {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      signer = provider.getSigner();
-      address = signer.getAddress();
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  // try {
+  //   const { ethereum } = window;
+  //   console.log("in");
+  //   if (ethereum) {
+  //     const provider = new ethers.providers.Web3Provider(ethereum);
+  //     signer = provider.getSigner();
+  //     address = signer.getAddress();
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 
   // notifiaction model code *******************************
   const [open, setOpen] = useState(false);
